@@ -6,7 +6,7 @@
       "Bash(python render_card.py:*)",
       "Bash(python render_reel.py:*)",
       "Bash(pip install -r requirements.txt)","mcp__Metricool_Social_Media_Management__createScheduledPost",
-"mcp__Metricool_Social_Media_Management__updateScheduledPost"
+"mcp__Metricool_Social_Media_Management__updateScheduledPost",
 
       "Bash(ffmpeg:*)",
       "Bash(ffprobe:*)",
