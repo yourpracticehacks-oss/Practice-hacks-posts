@@ -111,7 +111,7 @@ git push -u origin main
 
 Then check every video and cover link returns `200`. Covers return
 `image/png`. Videos return `application/octet-stream`; that is how GitHub
-serves MP4 files, and it is expected.
+serves MP4 files, and Metricool accepts it (confirmed with post 22).
 
 ```sh
 for f in post-NN.mp4 post-NN-cover.png; do
