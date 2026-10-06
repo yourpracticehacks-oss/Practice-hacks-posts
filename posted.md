@@ -10,3 +10,4 @@ Status values: `sample` (rendered only, never sent to Metricool), `draft`
 | Post | Date (Friday) | Topic ID | Topic                           | Status    | Image                                                                                           | Metricool |
 |------|---------------|----------|---------------------------------|-----------|-------------------------------------------------------------------------------------------------|-----------|
 | 20   | —             | —        | Use names before you use volume | sample    | https://raw.githubusercontent.com/yourpracticehacks-oss/Practice-hacks-posts/main/cards/post-20.png | —         |
+| 21   | 2026-10-09    | T01      | Cut the lines: fewer kids waiting, more kids moving | draft | https://raw.githubusercontent.com/yourpracticehacks-oss/Practice-hacks-posts/main/cards/post-21.png | https://app.metricool.com/planner/calendar?blogId=7103553&openWithPostUuid=3724596559055441100 |
