@@ -1,0 +1,22 @@
+{
+  "day": "Friday",
+  "post": 20,
+  "title": "Friday Quick Tip",
+  "subtitle": "Use names before you use volume",
+  "intro": [
+    "The field gets noisy.",
+    "You repeat the same instruction louder and louder."
+  ],
+  "statement": "Volume does not guarantee attention.",
+  "q1": "Do you call the player's name and wait for eye contact —",
+  "q2": "or coach the moment before it disappears?",
+  "q3": "When is immediate feedback actually useful?",
+  "t1": "There is no perfect answer here. But communication works better",
+  "t2": "when the player knows the message is theirs.",
+  "cta": "Coaches — how do you get attention fast?",
+  "ctaLines": [
+    "Name first. Eye contact. One short cue.",
+    "Correct it now or save it for the dugout?"
+  ],
+  "ctaPrompt": "Drop your communication habit below. There are no wrong answers."
+}
