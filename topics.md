@@ -167,13 +167,13 @@ topics. To skip one, move it lower in the list.
 | T156| Practice habits          | Practicing the boring basics                                         |
 | T157| Keeping kids engaged     | Ending practice with a team challenge                                |
 | T158| Communication            | One word for the team to focus on                                    |
-| T159| Handling parents         | When a parent pulls their child from the team                        |
+| T165| Handling parents         | End-of-season thank-you to parents                                   |
 | T160| Game-day decisions       | Team nerves before a big game                                        |
 | T161| Building confidence      | Confidence for the smallest player                                   |
 | T162| Practice habits          | Short practices or long practices                                    |
 | T163| Keeping kids engaged     | Games that use the whole team at once                                |
 | T164| Communication            | Talking less at practice                                             |
-| T165| Handling parents         | End-of-season thank-you to parents                                   |
+| T159| Handling parents         | When a parent pulls their child from the team                        |
 | T166| Game-day decisions       | Choosing who takes the free throws or penalty kicks                  |
 | T167| Building confidence      | Each kid's highlight at season's end                                 |
 | T168| Practice habits          | The last practice of the season                                      |
