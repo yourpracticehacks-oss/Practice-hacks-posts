@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 render_card.py:*)",
+      "Bash(python3 render_reel.py:*)",
+      "Bash(python render_card.py:*)",
+      "Bash(python render_reel.py:*)",
+      "Bash(pip install -r requirements.txt)",
+      "Bash(ffmpeg:*)",
+      "Bash(ffprobe:*)",
+      "Bash(git status:*)",
+      "Bash(git log:*)",
+      "Bash(git diff:*)",
+      "Bash(git fetch:*)",
+      "Bash(git pull:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push -u origin main)",
+      "Bash(curl -sS -o /dev/null:*)",
+      "mcp__Metricool_Social_Media_Management__getBrandSettings",
+      "mcp__Metricool_Social_Media_Management__getScheduledPosts",
+      "mcp__Metricool_Social_Media_Management__getBestTimeToPostByNetwork"
+    ]
+  }
+}
