@@ -193,6 +193,17 @@ def draw_scene(frame, label, placed, block_h, t, duration, first):
     frame.alpha_composite(layer)
 
 
+def music_credit(music):
+    """The credit line for a track in music/, from music/tracks.json."""
+    credits_path = MUSIC_DIR / "tracks.json"
+    credits = json.loads(credits_path.read_text(encoding="utf-8")) if credits_path.exists() else {}
+    entry = credits.get(music.name)
+    if entry is None:
+        raise SystemExit(f"No credit entry for {music.name} in {credits_path}. "
+                         "Add its title and license credit before using it.")
+    return entry.get("credit", "")
+
+
 def pick_music(tip):
     """The track for this tip: its "music" field, else rotate by post number."""
     if tip.get("music"):
@@ -286,9 +297,12 @@ def main():
     out = Path(args.out) if args.out else ROOT / "reels" / f"{tip_path.stem}.mp4"
     cover = out.with_name(f"{out.stem}-cover.png")
     music = Path(args.music) if args.music else pick_music(tip)
+    credit = music_credit(music) if music and music.parent.resolve() == MUSIC_DIR else None
     total = render_reel(tip, out, cover, music)
     track = f", music: {music.name}" if music else ", no music"
     print(f"Wrote {out} ({total:.1f}s{track}) and {cover}")
+    if credit:
+        print("Add this credit to the caption, above the hashtags:\n" + credit)
 
 
 if __name__ == "__main__":

@@ -90,9 +90,11 @@ python render_card.py tips/post-NN.json   # cards/post-NN.png, kept as a still v
 ```
 
 Music comes from `music/`, rotating by post number (see `music/README.md`).
-The renderer prints which track it used. If `music/` has no tracks, the reel
-is silent; say so in the summary. If a track needs a credit, add it to the
-end of the caption, above the hashtags.
+The renderer prints which track it used and the credit line for it. Add
+that credit to the caption exactly as printed, on its own lines after the
+caption text and above the hashtags. Also set `"music": "<file name>"` in the tip
+JSON so the reel always re-renders with the same track. If `music/` has no tracks, the reel is
+silent; say so in the summary.
 
 Check each reel: it should be 20-32 seconds long. Pull a few frames and look
 at them, including the very first frame (the hook must be fully visible) and
