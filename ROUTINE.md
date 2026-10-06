@@ -1,9 +1,11 @@
 # Monthly Posting Routine
 
 Run once a month, before the month starts. It writes, renders, and schedules
-one Friday tip for every Friday in the **next calendar month**.
+one Friday tip for every Friday in the **next calendar month**. Each tip goes
+out as a **reel** (a 9:16 video with a cover image). See the Reels section of
+`voice.md`.
 
-**Golden rule:** if any step fails (a card will not render, an image link does
+**Golden rule:** if any step fails (a reel will not render, a media link does
 not load, git push is rejected, Metricool returns an error), **stop and report**
 what failed and what has been done so far. Do not guess, retry with changed
 content, or skip ahead.
@@ -14,9 +16,10 @@ content, or skip ahead.
 |-----------------|-----------------------------------------------------------------------|
 | Branch          | `main`                                                                |
 | Metricool brand | `7103553` (yourpracticehacks.com)                                     |
-| Networks        | Facebook and Instagram, together in one post                          |
+| Networks        | Facebook and Instagram, together in one post, as a Reel on both       |
 | Post time       | 10:00 AM `America/New_York` on each Friday                            |
-| Image URL       | `https://raw.githubusercontent.com/yourpracticehacks-oss/Practice-hacks-posts/main/cards/post-NN.png` |
+| Video URL       | `https://raw.githubusercontent.com/yourpracticehacks-oss/Practice-hacks-posts/main/reels/post-NN.mp4` |
+| Cover URL       | `https://raw.githubusercontent.com/yourpracticehacks-oss/Practice-hacks-posts/main/reels/post-NN-cover.png` |
 
 ## Steps
 
@@ -57,16 +60,20 @@ Skip any Friday already in `posted.md`, so a run can be repeated safely.
 
 Read `voice.md` first. Create `tips/post-NN.json` using `tips/post-20.json` as
 the template. Set `"day": "Friday"` and `"post": NN`, and fill every field
-following the anatomy in `voice.md`: a real moment, one clear idea, an honest
-either/or question, a gentle takeaway, an invitation to comment. No
-exclamation points, no emojis, no hype. Keep `q1`, `q2`, `t1`, `t2` short
+following the anatomy in `voice.md`: a hook, a real moment, one clear idea,
+an honest either/or question, a gentle takeaway, an invitation to comment. No
+exclamation points, no emojis, no hype. The `hook` matters most: it is the
+first frame of the reel and the cover headline. Write three, keep the one a
+coach would stop scrolling for, and follow the hook rules in `voice.md`. Keep `q1`, `q2`, `t1`, `t2` short
 enough to sit on one line each (about 55 characters).
 
 Add these fields to the same JSON:
 
 - `"topicId"`: the topic ID, e.g. `"T01"`.
 - `"caption"`: the social caption, written as:
-  - 3-5 short lines that restate the idea in the voice of `voice.md` and ask
+  - The first line is the hook, or a close variant of it. It is all most
+    people see before "more."
+  - 3-5 short lines in total that restate the idea in the voice of `voice.md` and ask
     coaches to share their habit in the comments. Each line is its own
     sentence or short pair of sentences, separated by `\n`.
   - A blank line, then 5-8 hashtags on one line. Always include
@@ -75,29 +82,42 @@ Add these fields to the same JSON:
     `#YouthBasketball`, `#PracticePlanning`, `#SportsParents`.
   - No emojis, no exclamation points.
 
-### 5. Render and check the cards
+### 5. Render and check the reels
 
 ```sh
-python render_card.py tips/post-NN.json
+python render_reel.py tips/post-NN.json   # reels/post-NN.mp4 and reels/post-NN-cover.png
+python render_card.py tips/post-NN.json   # cards/post-NN.png, kept as a still version
 ```
 
-Open every PNG and look at it. Check that no line is cut off, no word is
-stranded, and that the renderer did not print a shrink note below about 90%.
-If it did, shorten the text and render again.
-
-### 6. Commit, push, and verify the image links
+Check each reel: it should be 20-32 seconds long. Pull a few frames and look
+at them, including the very first frame (the hook must be fully visible) and
+the last scene:
 
 ```sh
-git add tips/ cards/
+ffmpeg -v error -i reels/post-NN.mp4 -vf "fps=1/2,scale=270:-1,tile=8x2" -frames:v 1 /tmp/sheet.png
+```
+
+Check that no line is cut off and no word is stranded. Look at the cover and
+the card too. If the card renderer prints a shrink note below about 90%,
+shorten the text and render again.
+
+### 6. Commit, push, and verify the media links
+
+```sh
+git add tips/ reels/ cards/
 git commit -m "Add Friday tips for <Month YYYY> (posts NN-MM)"
 git push -u origin main
 ```
 
-Then check every image link returns `200` and `image/png`:
+Then check every video and cover link returns `200`. Covers return
+`image/png`. Videos return `application/octet-stream`; that is how GitHub
+serves MP4 files, and it is expected.
 
 ```sh
-curl -sS -o /dev/null -w "%{http_code} %{content_type}\n" \
-  https://raw.githubusercontent.com/yourpracticehacks-oss/Practice-hacks-posts/main/cards/post-NN.png
+for f in post-NN.mp4 post-NN-cover.png; do
+  curl -sS -o /dev/null -w "$f %{http_code} %{content_type}\n" \
+    https://raw.githubusercontent.com/yourpracticehacks-oss/Practice-hacks-posts/main/reels/$f
+done
 ```
 
 A new file can take a minute or two to appear on raw.githubusercontent.com.
@@ -122,25 +142,27 @@ Then, for each Friday, call `createScheduledPost` once with:
   "descendants": [],
   "firstCommentText": "",
   "hasNotReadNotes": false,
-  "media": ["<raw image URL for post-NN.png>"],
-  "mediaAltText": ["<one-sentence description of the card: title, subtitle, and statement>"],
+  "media": ["<video URL for post-NN.mp4>"],
+  "videoThumbnailUrl": "<cover URL for post-NN-cover.png>",
+  "mediaAltText": ["<one sentence: the hook and the statement>"],
   "providers": [{"network": "facebook"}, {"network": "instagram"}],
   "publicationDate": {"dateTime": "2026-11-06T10:00:00", "timezone": "America/New_York"},
   "shortener": false,
   "smartLinkData": {"ids": []},
   "text": "<caption from the tip JSON>",
-  "facebookData": {"type": "POST"},
-  "instagramData": {"type": "POST"}
+  "facebookData": {"type": "REEL"},
+  "instagramData": {"type": "REEL", "showReelOnFeed": true}
 }
 ```
 
-Record the `plannerUrl` from each response. If any call returns an error,
+Check that the response lists both networks and that `media` points at a
+Metricool copy of the video. Record the `plannerUrl` from each response. If any call returns an error,
 stop and report. Do not retry with altered text or settings.
 
 ### 8. Update the log
 
 Add one row per post to `posted.md`: post number, date, topic ID, topic,
-status (`scheduled`), image link, and Metricool planner link. Then:
+status (`scheduled`), reel link, and Metricool planner link. Then:
 
 ```sh
 git add posted.md
@@ -150,7 +172,7 @@ git push -u origin main
 
 ### 9. Summary
 
-End with a table: date, post number, topic, image link, Metricool link.
+End with a table: date, post number, topic, hook, reel link, Metricool link.
 List anything that needs a person to look at it.
 
 ## Test runs
