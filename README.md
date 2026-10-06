@@ -11,6 +11,7 @@ Social media tips for youth sports coaches.
 - `tips/`: one JSON file per tip (e.g. `tips/post-20.json`).
 - `render_reel.py`: turns a tip into a 1080x1920 MP4 reel and a cover image.
 - `reels/`: rendered reels and covers. Reels are the main format.
+- `music/`: licensed background tracks for reels (see `music/README.md`).
 - `render_card.py`: turns a tip into a 1080x1350 PNG card (still version).
 - `cards/`: rendered cards.
 - `topics.md`, `posted.md`, `ROUTINE.md`: topic backlog, post log, and the

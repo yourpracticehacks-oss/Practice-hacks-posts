@@ -8,6 +8,12 @@ that rises in line by line. It also writes a cover image for the reel.
 Usage:
     python render_reel.py tips/post-21.json     # -> reels/post-21.mp4 and reels/post-21-cover.png
     python render_reel.py tips/post-21.json -o out.mp4
+    python render_reel.py tips/post-21.json --music music/some-track.mp3
+
+Music: if the tip JSON has a "music" field (a file in music/), that track is
+used. Otherwise tracks in music/ rotate by post number. With no tracks, the
+reel is silent. The track loops if it is shorter than the reel, fades in and
+out, and is levelled to a steady volume.
 """
 
 import argparse
@@ -23,6 +29,9 @@ from render_card import (
 )
 
 ROOT = Path(__file__).resolve().parent
+MUSIC_DIR = ROOT / "music"
+MUSIC_EXTS = {".mp3", ".m4a", ".aac", ".wav", ".ogg", ".flac"}
+MUSIC_LEVEL = -18  # integrated loudness in LUFS; quiet enough to sit under reading
 
 W, H = 1080, 1920
 FPS = 30
@@ -184,7 +193,28 @@ def draw_scene(frame, label, placed, block_h, t, duration, first):
     frame.alpha_composite(layer)
 
 
-def render_reel(tip, out_path, cover_path):
+def pick_music(tip):
+    """The track for this tip: its "music" field, else rotate by post number."""
+    if tip.get("music"):
+        path = MUSIC_DIR / tip["music"]
+        if not path.exists():
+            raise SystemExit(f"Music file not found: {path}")
+        return path
+    tracks = sorted(p for p in MUSIC_DIR.glob("*") if p.suffix.lower() in MUSIC_EXTS)
+    return tracks[int(tip["post"]) % len(tracks)] if tracks else None
+
+
+def audio_args(music, total):
+    if music is None:
+        # Silent stereo track: some players and uploaders expect an audio stream.
+        return (["-f", "lavfi", "-i", "anullsrc=channel_layout=stereo:sample_rate=44100"], [])
+    fade_out = max(total - 2.0, 0)
+    filters = (f"afade=t=in:d=1,afade=t=out:st={fade_out:.2f}:d=2,"
+               f"loudnorm=I={MUSIC_LEVEL}:TP=-2:LRA=11,aresample=44100")
+    return (["-stream_loop", "-1", "-i", str(music)], ["-af", filters])
+
+
+def render_reel(tip, out_path, cover_path, music=None):
     scenes = [(label, *layout(els), scene_duration(i, els))
               for i, (label, els) in enumerate(build_scenes(tip))]
     total = sum(s[3] for s in scenes)
@@ -192,12 +222,12 @@ def render_reel(tip, out_path, cover_path):
     base = base_frame(tip).convert("RGBA")
 
     out_path.parent.mkdir(parents=True, exist_ok=True)
+    audio_in, audio_filter = audio_args(music, total)
     cmd = [
         "ffmpeg", "-y", "-loglevel", "error",
         "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{W}x{H}", "-r", str(FPS), "-i", "-",
-        # Silent stereo track: some players and uploaders expect an audio stream.
-        "-f", "lavfi", "-i", "anullsrc=channel_layout=stereo:sample_rate=44100",
-        "-shortest", "-map", "0:v", "-map", "1:a",
+        *audio_in,
+        "-shortest", "-map", "0:v", "-map", "1:a", *audio_filter,
         "-c:v", "libx264", "-profile:v", "high", "-preset", "medium", "-crf", "20",
         "-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a", "128k",
         "-movflags", "+faststart", str(out_path),
@@ -248,14 +278,17 @@ def main():
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("tip", help="Path to tip JSON file")
     parser.add_argument("-o", "--out", help="Output MP4 (default: reels/<tip name>.mp4)")
+    parser.add_argument("--music", help="Music file to use instead of the automatic pick")
     args = parser.parse_args()
 
     tip_path = Path(args.tip)
     tip = json.loads(tip_path.read_text(encoding="utf-8"))
     out = Path(args.out) if args.out else ROOT / "reels" / f"{tip_path.stem}.mp4"
     cover = out.with_name(f"{out.stem}-cover.png")
-    total = render_reel(tip, out, cover)
-    print(f"Wrote {out} ({total:.1f}s) and {cover}")
+    music = Path(args.music) if args.music else pick_music(tip)
+    total = render_reel(tip, out, cover, music)
+    track = f", music: {music.name}" if music else ", no music"
+    print(f"Wrote {out} ({total:.1f}s{track}) and {cover}")
 
 
 if __name__ == "__main__":

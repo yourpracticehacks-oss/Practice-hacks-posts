@@ -89,6 +89,11 @@ python render_reel.py tips/post-NN.json   # reels/post-NN.mp4 and reels/post-NN-
 python render_card.py tips/post-NN.json   # cards/post-NN.png, kept as a still version
 ```
 
+Music comes from `music/`, rotating by post number (see `music/README.md`).
+The renderer prints which track it used. If `music/` has no tracks, the reel
+is silent; say so in the summary. If a track needs a credit, add it to the
+end of the caption, above the hashtags.
+
 Check each reel: it should be 20-32 seconds long. Pull a few frames and look
 at them, including the very first frame (the hook must be fully visible) and
 the last scene:
