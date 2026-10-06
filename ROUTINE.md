@@ -6,8 +6,9 @@ December 1 it builds January, and so on. That keeps about a month of posts
 lined up at all times.
 
 Two reels a day, at **10:00 AM and 5:00 PM** `America/New_York`, on Facebook
-and Instagram together. Each run saves its posts in Metricool as **drafts**.
-A person reviews them in Metricool and clicks schedule.
+and Instagram together. Each run **schedules its posts to go live** in
+Metricool (the owner chose this on Oct 6, 2026). The owner can still review,
+edit, or delete any post in Metricool before it goes out.
 
 **Golden rule:** if any step fails (a reel will not render, a media link does
 not load, git push is rejected, Metricool returns an error), **stop and report**
@@ -124,15 +125,14 @@ Print the requests and send each one with `createScheduledPost`:
 python3 tools/metricool_payloads.py <first> <last> <commit SHA>
 ```
 
-Before sending, set `"draft": true` in each request (the script prints
-`"draft": false`, which schedules the post to go live). Check each response
-lists both networks and points `media` at a Metricool copy of the video.
+Send each request as printed (`"draft": false`, scheduled to go live).
+Check each response lists both networks and points `media` at a Metricool copy of the video.
 Record each `plannerUrl`. If any call errors, stop and report.
 
 ### 8. Update the log
 
 Add one row per post to `posted.md`: post number, date and time, topic ID,
-topic, status (`draft`), reel link (the `main` URL), and Metricool link.
+topic, status (`scheduled`), reel link (the `main` URL), and Metricool link.
 Commit and push.
 
 Also check last month's drafts with `getScheduledPosts`: any that are now
@@ -141,5 +141,4 @@ scheduled (`"draft": false`) move from `draft` to `scheduled` in `posted.md`.
 ### 9. Summary
 
 End with: the month built, how many posts, the first and last dates, any new
-topics added, anything skipped or flagged, and a reminder that the drafts need
-to be reviewed and scheduled in Metricool.
+topics added, and anything skipped or flagged.
