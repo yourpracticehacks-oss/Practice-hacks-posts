@@ -1,12 +1,13 @@
 # Monthly Posting Routine
 
-Runs automatically on the 20th of each month (a Claude Code Routine). It
-writes and renders one Friday tip for every Friday from tomorrow through the
-end of the **next calendar month** that is not already in `posted.md`, and
-saves each one in Metricool as a **draft**. A person reviews the drafts in
-Metricool and clicks schedule. Nothing goes live without that click. Each tip goes
-out as a **reel** (a 9:16 video with a cover image). See the Reels section of
-`voice.md`.
+Runs automatically on the **1st of each month** (a Claude Code Routine) and
+builds the **following month**: on November 1 it builds December, on
+December 1 it builds January, and so on. That keeps about a month of posts
+lined up at all times.
+
+Two reels a day, at **10:00 AM and 5:00 PM** `America/New_York`, on Facebook
+and Instagram together. Each run saves its posts in Metricool as **drafts**.
+A person reviews them in Metricool and clicks schedule.
 
 **Golden rule:** if any step fails (a reel will not render, a media link does
 not load, git push is rejected, Metricool returns an error), **stop and report**
@@ -15,14 +16,22 @@ content, or skip ahead.
 
 ## Fixed settings
 
-| Setting         | Value                                                                 |
-|-----------------|-----------------------------------------------------------------------|
-| Branch          | `main`                                                                |
-| Metricool brand | `7103553` (yourpracticehacks.com)                                     |
-| Networks        | Facebook and Instagram, together in one post, as a Reel on both       |
-| Post time       | 10:00 AM `America/New_York` on each Friday                            |
-| Video URL       | `https://raw.githubusercontent.com/yourpracticehacks-oss/Practice-hacks-posts/main/reels/post-NN.mp4` |
-| Cover URL       | `https://raw.githubusercontent.com/yourpracticehacks-oss/Practice-hacks-posts/main/reels/post-NN-cover.png` |
+| Setting         | Value                                                              |
+|-----------------|--------------------------------------------------------------------|
+| Branch          | `main`                                                             |
+| Metricool brand | `7103553` (yourpracticehacks.com)                                  |
+| Networks        | Facebook and Instagram, together in one post, as a Reel on both    |
+| Post times      | 10:00 and 17:00 `America/New_York`, every day                      |
+| Media URLs      | `https://raw.githubusercontent.com/yourpracticehacks-oss/Practice-hacks-posts/<commit SHA>/reels/post-NN.mp4` and `post-NN-cover.png` |
+
+## Tools
+
+| Tool                          | What it does                                                    |
+|-------------------------------|-----------------------------------------------------------------|
+| `tools/gen_tips.py`           | Turns a batch of written tips into `tips/post-NN.json` files, each with its time slot, day label, music, credit, and caption |
+| `tools/render_range.sh A B`   | Renders reels, covers, and cards for posts A..B, three at a time |
+| `tools/qa_reels.py A B out.png` | Checks length and audio level, and builds a contact sheet to look at |
+| `tools/metricool_payloads.py A B SHA` | Prints the `createScheduledPost` request for each post, media pinned to the commit |
 
 ## Steps
 
@@ -33,169 +42,104 @@ git checkout main && git pull origin main
 pip install -r requirements.txt
 ```
 
-### 2. Find the Fridays
+### 2. Work out the month
 
-List every Friday from tomorrow through the end of the next calendar month
-(a run on October 20 covers October 23 and 30 and every Friday in November).
-Skip any Friday already in `posted.md`, and any Friday that already has a
-post in Metricool (step 7). Get the UTC offset for 10:00 AM
-New York time on each date. Daylight saving time changes in March and
-November, so do not assume the offset:
+The target month is the month **after** the current one. Find the last post
+number (the highest `tips/post-NN.json`); new posts continue from there.
 
-```sh
-python3 -c "
-import calendar, datetime as d; from zoneinfo import ZoneInfo
-tz = ZoneInfo('America/New_York'); today = d.datetime.now(tz).date()
-y, m = (today.year + 1, 1) if today.month == 12 else (today.year, today.month + 1)
-end = d.date(y, m, calendar.monthrange(y, m)[1])
-day = today + d.timedelta(days=1)
-while day <= end:
-    if day.weekday() == 4: print(d.datetime(day.year, day.month, day.day, 10, tzinfo=tz).isoformat())
-    day += d.timedelta(days=1)"
-```
-
-Skip any Friday already in `posted.md`, so a run can be repeated safely.
-
-### 3. Pick topics and post numbers
-
-- Post numbers continue from the last row of `posted.md` (+1 per Friday, in
-  date order).
-- For each Friday, take the next topic from `topics.md`, top to bottom, whose
-  ID is not in `posted.md`.
-- If the backlog runs out, stop and report. Do not invent topics.
-
-### 4. Write each tip
-
-Read `voice.md` first. Create `tips/post-NN.json` using `tips/post-20.json` as
-the template. Set `"day": "Friday"` and `"post": NN`, and fill every field
-following the anatomy in `voice.md`: a hook, a real moment, one clear idea,
-an honest either/or question, a gentle takeaway, an invitation to comment. No
-exclamation points, no emojis, no hype. The `hook` matters most: it is the
-first frame of the reel and the cover headline. Write three, keep the one a
-coach would stop scrolling for, and follow the hook rules in `voice.md`. Keep `q1`, `q2`, `t1`, `t2` short
-enough to sit on one line each (about 55 characters).
-
-Add these fields to the same JSON:
-
-- `"topicId"`: the topic ID, e.g. `"T01"`.
-- `"caption"`: the social caption, written as:
-  - The first line is the hook, or a close variant of it. It is all most
-    people see before "more."
-  - 3-5 short lines in total that restate the idea in the voice of `voice.md` and ask
-    coaches to share their habit in the comments. Each line is its own
-    sentence or short pair of sentences, separated by `\n`.
-  - A blank line, then 5-8 hashtags on one line. Always include
-    `#YouthSports` and `#YouthCoach`. Add others that fit the topic, such as
-    `#VolunteerCoach`, `#CoachingTips`, `#YouthSoccer`, `#LittleLeague`,
-    `#YouthBasketball`, `#PracticePlanning`, `#SportsParents`.
-  - No emojis, no exclamation points.
-
-### 5. Render and check the reels
+Some or all of the month may already be written. Check how many open slots
+remain:
 
 ```sh
-python render_reel.py tips/post-NN.json   # reels/post-NN.mp4 and reels/post-NN-cover.png
-python render_card.py tips/post-NN.json   # cards/post-NN.png, kept as a still version
+python3 -c "import sys; sys.path.insert(0, 'tools'); import gen_tips as g; print(len(g.free_slots(2027, 1)))"
 ```
 
-Music comes from `music/`, rotating by post number (see `music/README.md`).
-The renderer prints which track it used and the credit line for it. Add
-that credit to the caption exactly as printed, on its own lines after the
-caption text and above the hashtags. Also set `"music": "<file name>"` in the tip
-JSON so the reel always re-renders with the same track. If `music/` has no tracks, the reel is
-silent; say so in the summary.
+If it prints `0`, every tip for the month already exists. Skip to step 5 and
+render, ship, and schedule the posts whose `publish` dates fall in the month.
 
-Check each reel: it should be 20-32 seconds long. Pull a few frames and look
-at them, including the very first frame (the hook must be fully visible) and
-the last scene:
+### 3. Topics
+
+Count unused topics:
 
 ```sh
-ffmpeg -v error -i reels/post-NN.mp4 -vf "fps=1/2,scale=270:-1,tile=8x2" -frames:v 1 /tmp/sheet.png
+python3 -c "import sys; sys.path.insert(0, 'tools'); import gen_tips as g; print(len(g.unused_topics()))"
 ```
 
-Check that no line is cut off and no word is stranded. Look at the cover and
-the card too. If the card renderer prints a shrink note below about 90%,
-shorten the text and render again.
+If there are fewer unused topics than open slots, add new topics to the
+bottom of `topics.md` first. Continue the IDs (T173, T174, ...), keep the six
+themes rotating in order (Keeping kids engaged, Communication, Handling
+parents, Game-day decisions, Building confidence, Practice habits), and do not
+repeat a topic already in the table. Think about the season: winter sports,
+holidays, and the start and end of seasons.
 
-### 6. Commit, push, and verify the media links
+### 4. Write the tips
+
+Read `voice.md` first. Write a batch file (a JSON list) with one entry per
+open slot, in order, using the next unused topics in order. Each entry has:
+`topic` (exactly as in `topics.md`), `subtitle`, `hook`, `intro` (two short
+lines), `statement`, `q1` (ends with ` —`), `q2`, `q3`, `t1`, `t2`, `cta`
+(starts with `Coaches — `), `ctaLines` (two lines), `ctaPrompt`, and `choice`
+(the either/or in a few words, used in the caption).
+
+Rules: no exclamation points, no emojis, no hype. The `hook` is the first
+frame of the reel and the cover headline. Keep it under about 12 words and
+follow the hook rules in `voice.md`. Vary the openers of `t1`; do not start
+every one with "There is no perfect answer."
+
+Then generate the tip files:
 
 ```sh
-git add tips/ reels/ cards/
-git commit -m "Add Friday tips for <Month YYYY> (posts NN-MM)"
-git push -u origin main
+python3 tools/gen_tips.py batch.json <first post number> <YYYY-MM>
 ```
 
-Then check every video and cover link returns `200`. Covers return
-`image/png`. Videos return `application/octet-stream`; that is how GitHub
-serves MP4 files, and Metricool accepts it (confirmed with post 22).
+It assigns time slots, the day label, music, the music credit, and the
+caption (hook, moment, idea, the either/or, the comment invitation, credit,
+hashtags).
+
+### 5. Render and check
 
 ```sh
-for f in post-NN.mp4 post-NN-cover.png; do
-  curl -sS -o /dev/null -w "$f %{http_code} %{content_type}\n" \
-    https://raw.githubusercontent.com/yourpracticehacks-oss/Practice-hacks-posts/main/reels/$f
-done
+tools/render_range.sh <first> <last>
+python3 tools/qa_reels.py <first> <last> /tmp/sheet.png
 ```
 
-A new file can take a minute or two to appear on raw.githubusercontent.com.
-Wait and check again, up to 5 minutes. If any link still fails, stop and report.
+Every reel must be 20-34 seconds with audible music (anything flagged
+`CHECK` needs a look). Open the contact sheet and look at it: no cut-off
+lines, no stranded words, and the hook fully visible on the first frame.
 
-### 7. Schedule in Metricool
+### 6. Commit, push, and verify links
 
-First, call `getScheduledPosts` for brand `7103553` over the month's dates in
-`America/New_York`. If a post already exists for a Friday, do not create a
-second one. Report it instead.
+Commit `tips/`, `reels/`, `cards/`, and `topics.md`, then push to `main`.
+Check every video and cover link at the pushed commit returns `200` and the
+same size as the local file. If any fails after five minutes, stop and report.
 
-Then, for each Friday, call `createScheduledPost` once with:
+### 7. Save to Metricool
 
-- `blogId`: `7103553`
-- `date`: the Friday at 10:00 with its offset, e.g. `2026-11-06T10:00:00-05:00`
-- `info`:
+Call `getScheduledPosts` for the month first. If a slot already has a post,
+skip that slot and report it.
 
-```json
-{
-  "autoPublish": true,
-  "draft": true,
-  "descendants": [],
-  "firstCommentText": "",
-  "hasNotReadNotes": false,
-  "media": ["<video URL for post-NN.mp4, pinned to the commit>"],
-  "videoThumbnailUrl": "<cover URL for post-NN-cover.png, pinned to the commit>",
-  "mediaAltText": ["<one sentence: the hook and the statement>"],
-  "providers": [{"network": "facebook"}, {"network": "instagram"}],
-  "publicationDate": {"dateTime": "2026-11-06T10:00:00", "timezone": "America/New_York"},
-  "shortener": false,
-  "smartLinkData": {"ids": []},
-  "text": "<caption from the tip JSON>",
-  "facebookData": {"type": "REEL"},
-  "instagramData": {"type": "REEL", "showReelOnFeed": true}
-}
+Print the requests and send each one with `createScheduledPost`:
+
+```sh
+python3 tools/metricool_payloads.py <first> <last> <commit SHA>
 ```
 
-Use URLs pinned to the commit you just pushed (`.../Practice-hacks-posts/<full
-commit SHA>/reels/...` instead of `.../main/reels/...`) so Metricool never
-fetches a stale cached copy.
-
-Check that the response lists both networks and `"draft": true` and that `media` points at a
-Metricool copy of the video. Record the `plannerUrl` from each response. If any call returns an error,
-stop and report. Do not retry with altered text or settings.
+Before sending, set `"draft": true` in each request (the script prints
+`"draft": false`, which schedules the post to go live). Check each response
+lists both networks and points `media` at a Metricool copy of the video.
+Record each `plannerUrl`. If any call errors, stop and report.
 
 ### 8. Update the log
 
-Add one row per post to `posted.md`: post number, date, topic ID, topic,
-status (`draft`), reel link (the `main` URL), and Metricool planner link. Then:
+Add one row per post to `posted.md`: post number, date and time, topic ID,
+topic, status (`draft`), reel link (the `main` URL), and Metricool link.
+Commit and push.
 
-```sh
-git add posted.md
-git commit -m "Log Friday tips for <Month YYYY>"
-git push -u origin main
-```
+Also check last month's drafts with `getScheduledPosts`: any that are now
+scheduled (`"draft": false`) move from `draft` to `scheduled` in `posted.md`.
 
 ### 9. Summary
 
-End with a table: date, post number, topic, hook, reel link, Metricool link.
-Then a short note: "These are drafts. Open each Metricool link, play the reel,
-and click schedule." List anything else that needs a person to look at it.
-
-## After you click schedule
-
-Once drafts are scheduled in Metricool, the next run updates their status in
-`posted.md` from `draft` to `scheduled` (check with `getScheduledPosts`).
+End with: the month built, how many posts, the first and last dates, any new
+topics added, anything skipped or flagged, and a reminder that the drafts need
+to be reviewed and scheduled in Metricool.
