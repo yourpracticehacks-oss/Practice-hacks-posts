@@ -1,7 +1,10 @@
 # Monthly Posting Routine
 
-Run once a month, before the month starts. It writes, renders, and schedules
-one Friday tip for every Friday in the **next calendar month**. Each tip goes
+Runs automatically on the 20th of each month (a Claude Code Routine). It
+writes and renders one Friday tip for every Friday from tomorrow through the
+end of the **next calendar month** that is not already in `posted.md`, and
+saves each one in Metricool as a **draft**. A person reviews the drafts in
+Metricool and clicks schedule. Nothing goes live without that click. Each tip goes
 out as a **reel** (a 9:16 video with a cover image). See the Reels section of
 `voice.md`.
 
@@ -32,18 +35,23 @@ pip install -r requirements.txt
 
 ### 2. Find the Fridays
 
-List every Friday in the next calendar month (for example, a run in late
-October covers every Friday in November). Get the UTC offset for 10:00 AM
+List every Friday from tomorrow through the end of the next calendar month
+(a run on October 20 covers October 23 and 30 and every Friday in November).
+Skip any Friday already in `posted.md`, and any Friday that already has a
+post in Metricool (step 7). Get the UTC offset for 10:00 AM
 New York time on each date. Daylight saving time changes in March and
 November, so do not assume the offset:
 
 ```sh
 python3 -c "
 import calendar, datetime as d; from zoneinfo import ZoneInfo
-y, m = 2026, 11   # the NEXT calendar month
-for day in range(1, calendar.monthrange(y, m)[1] + 1):
-    t = d.datetime(y, m, day, 10, tzinfo=ZoneInfo('America/New_York'))
-    if t.weekday() == 4: print(t.isoformat())"
+tz = ZoneInfo('America/New_York'); today = d.datetime.now(tz).date()
+y, m = (today.year + 1, 1) if today.month == 12 else (today.year, today.month + 1)
+end = d.date(y, m, calendar.monthrange(y, m)[1])
+day = today + d.timedelta(days=1)
+while day <= end:
+    if day.weekday() == 4: print(d.datetime(day.year, day.month, day.day, 10, tzinfo=tz).isoformat())
+    day += d.timedelta(days=1)"
 ```
 
 Skip any Friday already in `posted.md`, so a run can be repeated safely.
@@ -145,12 +153,12 @@ Then, for each Friday, call `createScheduledPost` once with:
 ```json
 {
   "autoPublish": true,
-  "draft": false,
+  "draft": true,
   "descendants": [],
   "firstCommentText": "",
   "hasNotReadNotes": false,
-  "media": ["<video URL for post-NN.mp4>"],
-  "videoThumbnailUrl": "<cover URL for post-NN-cover.png>",
+  "media": ["<video URL for post-NN.mp4, pinned to the commit>"],
+  "videoThumbnailUrl": "<cover URL for post-NN-cover.png, pinned to the commit>",
   "mediaAltText": ["<one sentence: the hook and the statement>"],
   "providers": [{"network": "facebook"}, {"network": "instagram"}],
   "publicationDate": {"dateTime": "2026-11-06T10:00:00", "timezone": "America/New_York"},
@@ -162,14 +170,18 @@ Then, for each Friday, call `createScheduledPost` once with:
 }
 ```
 
-Check that the response lists both networks and that `media` points at a
+Use URLs pinned to the commit you just pushed (`.../Practice-hacks-posts/<full
+commit SHA>/reels/...` instead of `.../main/reels/...`) so Metricool never
+fetches a stale cached copy.
+
+Check that the response lists both networks and `"draft": true` and that `media` points at a
 Metricool copy of the video. Record the `plannerUrl` from each response. If any call returns an error,
 stop and report. Do not retry with altered text or settings.
 
 ### 8. Update the log
 
 Add one row per post to `posted.md`: post number, date, topic ID, topic,
-status (`scheduled`), reel link, and Metricool planner link. Then:
+status (`draft`), reel link (the `main` URL), and Metricool planner link. Then:
 
 ```sh
 git add posted.md
@@ -180,10 +192,10 @@ git push -u origin main
 ### 9. Summary
 
 End with a table: date, post number, topic, hook, reel link, Metricool link.
-List anything that needs a person to look at it.
+Then a short note: "These are drafts. Open each Metricool link, play the reel,
+and click schedule." List anything else that needs a person to look at it.
 
-## Test runs
+## After you click schedule
 
-To test without publishing, set `"draft": true` in step 7 and log the status
-as `draft`. A draft is not published until someone schedules it in the
-Metricool app.
+Once drafts are scheduled in Metricool, the next run updates their status in
+`posted.md` from `draft` to `scheduled` (check with `getScheduledPosts`).
