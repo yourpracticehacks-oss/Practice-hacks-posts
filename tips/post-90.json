@@ -1,0 +1,27 @@
+{
+  "day": "Tuesday",
+  "post": 90,
+  "topicId": "T70",
+  "publish": "2026-11-10T17:00:00-05:00",
+  "title": "Tuesday Quick Tip",
+  "subtitle": "Missed practice, game time",
+  "hook": "A player missed practice. Do they play the full game?",
+  "intro": [
+    "They missed two practices this week.",
+    "Their teammates were all there."
+  ],
+  "statement": "Fair rules are rules everyone knew in advance.",
+  "q1": "Do you reduce playing time for missed practice —",
+  "q2": "or keep game time separate from attendance?",
+  "q3": "Was the absence the kid's choice?",
+  "t1": "Every team is different. But rules feel fair",
+  "t2": "when they are set before anyone breaks them.",
+  "cta": "Coaches — does practice affect game time?",
+  "ctaLines": [
+    "Yes, with notice. No, never. Depends on the reason.",
+    "Link them or keep them separate?"
+  ],
+  "ctaPrompt": "Share your rule below. There are no wrong answers.",
+  "caption": "A player missed practice. Do they play the full game?\nThey missed two practices this week. Their teammates were all there.\nFair rules are rules everyone knew in advance.\nLink attendance to playing time or keep them separate. Every team is different.\nDoes practice affect game time? Share your habit in the comments.\n\nMusic: \"Almost Bliss\" Kevin MacLeod (incompetech.com)\nLicensed under Creative Commons: By Attribution 4.0\nhttp://creativecommons.org/licenses/by/4.0/\n\n#YouthSoftball #Softball #FastpitchSoftball #YouthCoach #CoachingTips #GameDay #SoftballCoach",
+  "music": "almost-bliss.mp3"
+}
