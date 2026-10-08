@@ -2,9 +2,18 @@
 
 **Tagline:** Your Team. Your Kids. Your Practice.
 
-Your Practice Hacks shares short, useful tips for youth sports coaches. Most of
-our readers are volunteers. They coach after work, on weekends, often for their
+Your Practice Hacks shares short, useful tips for youth **softball** coaches.
+Most of our readers are volunteers. They coach after work, on weekends, often for their
 own kid's team. Every post should respect their time and their judgment.
+
+## Softball, always
+
+Every post is about softball. Use softball moments and words: innings, at-bats,
+the dugout, the circle, grounders, bases, umpires, gloves, bat bags, first
+pitch. Never use another sport's terms (no goals scored, halftime, referees,
+kickoff, shin guards, dribbling, free throws). Hashtags come from
+`tools/gen_tips.py` and are softball hashtags. Refer to players as "they";
+do not assume a gender.
 
 ## Tone
 

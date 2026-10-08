@@ -82,7 +82,7 @@ lines), `statement`, `q1` (ends with ` —`), `q2`, `q3`, `t1`, `t2`, `cta`
 (starts with `Coaches — `), `ctaLines` (two lines), `ctaPrompt`, and `choice`
 (the either/or in a few words, used in the caption).
 
-Rules: no exclamation points, no emojis, no hype. The `hook` is the first
+Rules: every tip is about softball (see the top of `voice.md`), no exclamation points, no emojis, no hype. The `hook` is the first
 frame of the reel and the cover headline. Keep it under about 12 words and
 follow the hook rules in `voice.md`. Vary the openers of `t1`; do not start
 every one with "There is no perfect answer."

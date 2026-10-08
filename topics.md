@@ -23,7 +23,7 @@ topics. To skip one, move it lower in the list.
 | T12 | Practice habits          | Plan the practice before you get to the field                        |
 | T13 | Communication            | Get down to eye level with young players                             |
 | T14 | Keeping kids engaged     | Let players choose the last drill                                    |
-| T15 | Handling parents         | Sideline coaching from parents during games                          |
+| T15 | Handling parents         | Coaching from the stands by parents during games                      |
 | T16 | Game-day decisions       | What you say in the huddle when you are losing big                   |
 | T17 | Building confidence      | Give every player a job that matters                                 |
 | T18 | Practice habits          | End practice on something the kids can do well                      |
@@ -39,8 +39,8 @@ topics. To skip one, move it lower in the list.
 | T28 | Game-day decisions       | Who starts the game                                                  |
 | T29 | Building confidence      | The player who freezes in games                                      |
 | T30 | Practice habits          | Arriving early to set up                                             |
-| T31 | Keeping kids engaged     | Small-sided games instead of full scrimmages                         |
-| T32 | Communication            | Halftime talks under two minutes                                     |
+| T31 | Keeping kids engaged     | Small stations instead of full scrimmages                         |
+| T32 | Communication            | Dugout talks under two minutes                                       |
 | T33 | Handling parents         | Parent volunteers with clear jobs                                    |
 | T34 | Game-day decisions       | Rotating captains                                                    |
 | T35 | Building confidence      | Letting kids fail in practice                                        |
@@ -90,7 +90,7 @@ topics. To skip one, move it lower in the list.
 | T79 | Keeping kids engaged     | Challenges kids can beat their own score on                          |
 | T80 | Communication            | Hand signals during games                                            |
 | T81 | Handling parents         | Parents at practice: watching or helping                             |
-| T82 | Game-day decisions       | What to say at halftime when winning                                 |
+| T82 | Game-day decisions       | What to say in the dugout with a lead                                 |
 | T83 | Building confidence      | Effort awards                                                        |
 | T84 | Practice habits          | Reviewing the last game at practice                                  |
 | T85 | Keeping kids engaged     | A practice with no lines at all                                      |
@@ -102,12 +102,12 @@ topics. To skip one, move it lower in the list.
 | T91 | Keeping kids engaged     | Mixing up teams every practice                                       |
 | T92 | Communication            | Specific praise instead of good job                                  |
 | T93 | Handling parents         | Thanking parents during the season                                   |
-| T94 | Game-day decisions       | Coaching from the sideline: talk or stay quiet                       |
+| T94 | Game-day decisions       | Coaching from the dugout: talk or stay quiet                         |
 | T95 | Building confidence      | When teammates laugh at a player                                     |
 | T96 | Practice habits          | A weather plan for practice                                          |
 | T97 | Keeping kids engaged     | A team routine kids look forward to                                  |
 | T98 | Communication            | Talking to kids about losing                                         |
-| T99 | Handling parents         | Parents yelling at referees                                          |
+| T99 | Handling parents         | Parents yelling at umpires                                           |
 | T100| Game-day decisions       | Keeping stats for young players                                      |
 | T101| Building confidence      | Small successes early in practice                                    |
 | T102| Practice habits          | One new skill per week                                               |
@@ -140,7 +140,7 @@ topics. To skip one, move it lower in the list.
 | T129| Handling parents         | A complaint by email                                                 |
 | T130| Game-day decisions       | The post-game handshake and team talk                                |
 | T131| Building confidence      | Trusting a young player in a big moment                              |
-| T132| Practice habits          | Practicing restarts and set plays                                    |
+| T132| Practice habits          | Practicing bunt coverage and set plays                                  |
 | T133| Keeping kids engaged     | Letting the team set a practice goal                                 |
 | T134| Communication            | Team talks in a circle or a line                                     |
 | T135| Handling parents         | Inviting parents to one practice                                     |
@@ -148,7 +148,7 @@ topics. To skip one, move it lower in the list.
 | T137| Building confidence      | Kids who are hard on themselves                                      |
 | T138| Practice habits          | Making practice harder than games                                    |
 | T139| Keeping kids engaged     | How long one drill should run                                        |
-| T140| Communication            | After a referee's bad call                                           |
+| T140| Communication            | After an umpire's bad call                                           |
 | T141| Handling parents         | Parents and the post-game huddle                                     |
 | T142| Game-day decisions       | A chance at a key position for every kid                             |
 | T143| Building confidence      | Letting players choose their own goal                                |
@@ -156,7 +156,7 @@ topics. To skip one, move it lower in the list.
 | T145| Keeping kids engaged     | Indoor practice in a small space                                     |
 | T146| Communication            | One-on-one check-ins with every player                               |
 | T147| Handling parents         | Sharing team goals with parents                                      |
-| T148| Game-day decisions       | Disagreeing with a referee                                           |
+| T148| Game-day decisions       | Disagreeing with an umpire                                           |
 | T149| Building confidence      | The player who scores a lot                                          |
 | T150| Practice habits          | Ending practice on time                                              |
 | T151| Keeping kids engaged     | Kids who are new to the sport                                        |
@@ -174,7 +174,7 @@ topics. To skip one, move it lower in the list.
 | T163| Keeping kids engaged     | Games that use the whole team at once                                |
 | T164| Communication            | Talking less at practice                                             |
 | T159| Handling parents         | When a parent pulls their child from the team                        |
-| T166| Game-day decisions       | Choosing who takes the free throws or penalty kicks                  |
+| T166| Game-day decisions       | Choosing who pitches the big inning                                 |
 | T167| Building confidence      | Each kid's highlight at season's end                                 |
 | T168| Practice habits          | The last practice of the season                                      |
 | T169| Keeping kids engaged     | Keeping it fun in a losing season                                    |
