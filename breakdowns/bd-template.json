@@ -1,0 +1,14 @@
+{
+  "number": 1,
+  "source": "videos/your-video.mp4",
+  "start": 12.0,
+  "end": 22.0,
+  "freeze_at": 17.0,
+  "freeze_for": 4,
+  "mark": {"x": 0.62, "y": 0.45, "r": 0.07},
+  "mark_label": "#7 finds space",
+  "hook": "Watch the player nobody is guarding.",
+  "point": ["Space beats speed.", "Teach kids to look for open grass before they ask for the ball."],
+  "question": "How do you teach young players to find space?",
+  "credit": "Video: <who filmed it> (used with permission)"
+}
