@@ -1,0 +1,24 @@
+{
+  "number": 2,
+  "sport": "basketball",
+  "hook": "Three players, one ball, one crowded spot.",
+  "players": {
+    "3":  {"team": "us", "path": [[0, 0.50, 0.86], [2.4, 0.52, 0.76]]},
+    "5":  {"team": "us", "path": [[0, 0.36, 0.62], [2.4, 0.40, 0.64]]},
+    "10": {"team": "us", "path": [[0, 0.68, 0.70], [2.4, 0.61, 0.68], [3.4, 0.61, 0.68], [5.0, 0.90, 0.16]]},
+    "12": {"team": "us", "path": [[0, 0.12, 0.20], [8.4, 0.12, 0.22]]},
+    "x3":  {"team": "them", "path": [[0, 0.50, 0.70], [2.4, 0.52, 0.64], [5.0, 0.52, 0.66]]},
+    "x5":  {"team": "them", "path": [[0, 0.38, 0.52], [8.4, 0.42, 0.52]]},
+    "x10": {"team": "them", "path": [[0, 0.64, 0.58], [3.4, 0.60, 0.57], [5.4, 0.74, 0.30], [7.0, 0.82, 0.22]]},
+    "x12": {"team": "them", "path": [[0, 0.20, 0.26], [8.4, 0.22, 0.28]]}
+  },
+  "ball": [[0, "3"], [5.6, "3"], [6.4, "10"], [8.4, "10"]],
+  "lanes": [
+    {"from": "3", "to": "10", "show": [5.0, 6.2], "style": "open"}
+  ],
+  "freeze": {"at": 3.4, "for": 4, "mark": "10", "label": "Too close", "label_side": "right"},
+  "end": 8.2,
+  "point": ["Space is a teammate.", "If two players could high-five, one of them should move."],
+  "question": "Do you teach spacing with spots on the floor, or with a simple rule?",
+  "caption_tags": "#YouthSports #YouthCoach #VolunteerCoach #CoachingTips #KidsSports #YouthBasketball"
+}
