@@ -18,14 +18,14 @@ ROOT = Path(__file__).resolve().parent.parent
 TZ = ZoneInfo("America/New_York")
 HOURS = (10, 17)
 TAGS = {
-    "Keeping kids engaged": "#PracticePlanning #KidsSports #YouthSoccer",
-    "Communication": "#PlayerDevelopment #CoachingLife #YouthBasketball",
-    "Handling parents": "#SportsParents #YouthSoccer #LittleLeague",
-    "Game-day decisions": "#GameDay #YouthBasketball #YouthSoccer",
-    "Building confidence": "#PlayerDevelopment #KidsSports #YouthBasketball",
-    "Practice habits": "#PracticePlanning #YouthSoccer #LittleLeague",
+    "Keeping kids engaged": "#PracticePlanning #SoftballDrills",
+    "Communication": "#PlayerDevelopment #SoftballCoach",
+    "Handling parents": "#SoftballParents #SportsParents",
+    "Game-day decisions": "#GameDay #SoftballCoach",
+    "Building confidence": "#PlayerDevelopment #SoftballLife",
+    "Practice habits": "#PracticePlanning #SoftballDrills",
 }
-BASE = "#YouthSports #YouthCoach #VolunteerCoach #CoachingTips"
+BASE = "#YouthSoftball #Softball #FastpitchSoftball #YouthCoach #CoachingTips"
 NO_ONE_ANSWER = ["There is no perfect answer.", "Both can work.", "Every team is different.",
                  "There is no single right way."]
 
