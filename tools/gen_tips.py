@@ -5,8 +5,8 @@ Usage: python3 tools/gen_tips.py batch.json FIRST_POST YYYY-MM
 
 batch.json is a list of tip dicts (topic, subtitle, hook, intro[2], statement,
 q1, q2, q3, t1, t2, cta, ctaLines[2], ctaPrompt, choice). Tips are numbered
-from FIRST_POST and placed, in order, into the free 10:00 and 17:00
-America/New_York slots of the month. A slot is free if no existing tip file
+from FIRST_POST and placed, in order, into the free 10:00 weekday
+America/New_York slots of the month (at most 20 a month, holidays skipped). A slot is free if no existing tip file
 already has that "publish" time. Each tip's "topic" must match the next
 unused topic in topics.md (a topic is used once a tip file has its topicId).
 """
@@ -16,7 +16,9 @@ from zoneinfo import ZoneInfo
 
 ROOT = Path(__file__).resolve().parent.parent
 TZ = ZoneInfo("America/New_York")
-HOURS = (10, 17)
+HOURS = (10,)            # one post a day at 10:00
+MONTHLY_CAP = 20         # the Metricool plan publishes at most 20 posts a month
+SKIP_DAYS = {(11, 26), (12, 24), (12, 25), (12, 31), (1, 1), (7, 4)}  # holidays (month, day)
 TAGS = {
     "Keeping kids engaged": "#PracticePlanning #SoftballDrills",
     "Communication": "#PlayerDevelopment #SoftballCoach",
@@ -35,14 +37,17 @@ def existing_tips():
 
 
 def free_slots(year, month):
-    taken = {t["publish"] for t in existing_tips() if t.get("publish")}
+    """Open 10:00 weekday slots in the month, skipping holidays, up to MONTHLY_CAP posts."""
+    tips = existing_tips()
+    taken = {t["publish"] for t in tips if t.get("publish")}
+    used = sum(1 for p in taken if p.startswith(f"{year}-{month:02d}"))
     out = []
     for day in range(1, calendar.monthrange(year, month)[1] + 1):
-        for h in HOURS:
-            when = d.datetime(year, month, day, h, tzinfo=TZ)
-            if when.isoformat() not in taken:
-                out.append(when)
-    return out
+        when = d.datetime(year, month, day, HOURS[0], tzinfo=TZ)
+        if when.weekday() >= 5 or (month, day) in SKIP_DAYS or when.isoformat() in taken:
+            continue
+        out.append(when)
+    return out[:max(MONTHLY_CAP - used, 0)]
 
 
 def unused_topics():

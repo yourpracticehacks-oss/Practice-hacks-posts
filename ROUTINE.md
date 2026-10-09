@@ -5,8 +5,10 @@ builds the **following month**: on November 1 it builds December, on
 December 1 it builds January, and so on. That keeps about a month of posts
 lined up at all times.
 
-Two reels a day, at **10:00 AM and 5:00 PM** `America/New_York`, on Facebook
-and Instagram together. Each run **schedules its posts to go live** in
+One reel a day, **Monday to Friday at 10:00 AM** `America/New_York`, on
+Facebook and Instagram together. **At most 20 posts a month**: the Metricool
+plan only publishes 20 a month, so anything past 20 would never go out.
+Holidays are skipped (Thanksgiving, Dec 24, 25 and 31, Jan 1, Jul 4). Each run **schedules its posts to go live** in
 Metricool (the owner chose this on Oct 6, 2026). The owner can still review,
 edit, or delete any post in Metricool before it goes out.
 
@@ -22,7 +24,7 @@ content, or skip ahead.
 | Branch          | `main`                                                             |
 | Metricool brand | `7103553` (yourpracticehacks.com)                                  |
 | Networks        | Facebook and Instagram, together in one post, as a Reel on both    |
-| Post times      | 10:00 and 17:00 `America/New_York`, every day                      |
+| Post times      | 10:00 `America/New_York`, Monday to Friday, max 20 a month          |
 | Media URLs      | `https://raw.githubusercontent.com/yourpracticehacks-oss/Practice-hacks-posts/<commit SHA>/reels/post-NN.mp4` and `post-NN-cover.png` |
 
 ## Tools
@@ -57,6 +59,9 @@ python3 -c "import sys; sys.path.insert(0, 'tools'); import gen_tips as g; print
 
 If it prints `0`, every tip for the month already exists. Skip to step 5 and
 render, ship, and schedule the posts whose `publish` dates fall in the month.
+(As of Oct 8, 2026, tips are written and dated through mid-June 2027, and
+Metricool already holds every post through March 12, 2027. For those months,
+step 7's duplicate check finds them all scheduled; just confirm and report.)
 
 ### 3. Topics
 
